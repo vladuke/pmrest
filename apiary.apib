@@ -132,82 +132,32 @@ Only the version information is taken into consideration.
             </requet>
 
 + Response 200
-    + Body
+
+            Retrieved list of packages' identifiers
+            <!-- Refer to XML and JSON schemas -->
 
 
 # Group Attributes
 
 ## Attributes Without Context [/attributes/?tokenKey]
-### List all plans' identifiers within an opportunity [GET]
+### Retrieve coplete details of the listed attribute (see payload) [POST]
 + Parameters
     + tokenKey (required, string) ... authentication token
-    
+
 + Request (application/xml)
-    + Body
-
-            <request>
-                <context>
-                    <version info="..."/>
-                </context>
-                <attributes>
-                    <attribute><attribute>
-                </attributes>
-            </requet>
-
-+ Response 200
-    + Body
-
-
-
-## New Plan for Opportunity [/opportunities/{ouid}/plans/?planType,skipValidation,tokenKey]
-### Create a plan [POST]
-+ Parameters
-    + ouid (required, integer) ... opportunity identifier
-    + planType (required, string) ... plan type for the new plan
-    + skipValidation (optional, boolean) ... enforce or ignore product validation rules
-    + tokenKey (required, string) ... authentication token
-
-+ Request (application/json, application/xml)
-
-        <!-- Refer to XML and JSON schemas -->
-
-+ Response 201
-
-    + Headers
-
-            Link: /opportunities/ouid/plans/puid
-
-## Existing Plan [/opportunities/{ouid}/plans/{puid}?tokenKey,skipValidation]
-### Retrieve a plan within an opportunity [GET]
-+ Parameters
-    + ouid (required, integer) ...  unique identfier of the opportunity
-    + puid (required, integer) ...  unique identfier of the plan
-    + tokenKey (required, string) ... authentication token
 
 + Response 200
 
-        <!-- Refer to XML and JSON schemas -->
 
+## Attributes With Context [/attributes/context/?tokenKey,includeDomains]
+### Retrieve complete information on every attribute in the list [POST]
 
-### Update Plan [PUT]
 + Parameters
-    + ouid (required, integer) ...  unique identfier of the opportunity
-    + puid (required, integer) ...  unique identfier of the plan
     + tokenKey (required, string) ... authentication token
+    + includeDomains (optional, boolen) ... whentrue the attributes will include list of domain values 
 
-+ Request (application/json, application/xml)
++ Response 200
 
-        <!-- Refer to XML and JSON schemas -->
-
-+ Response 204
-
-### Delete Plan [DELETE]
-+ Parameters
-    + ouid (required, integer) ...  unique identfier of the opportunity
-    + puid (required, integer) ...  unique identfier of the plan
-    + tokenKey (required, string) ... authentication token
-
-+ Response 204
 
 # Group Opportuniy Packages
 
