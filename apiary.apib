@@ -133,30 +133,65 @@ Only the version information is taken into consideration.
 
 + Response 200
 
-            Retrieved list of packages' identifiers
-            <!-- Refer to XML and JSON schemas -->
+            <!-- Sample & refer to XML  schemas -->
 
 
 # Group Attributes
 
 ## Attributes Without Context [/attributes/?tokenKey]
-### Retrieve coplete details of the listed attribute (see payload) [POST]
+### Retrieve coplete details of the attribute included on the list  [POST]
 + Parameters
     + tokenKey (required, string) ... authentication token
 
-+ Request (application/xml)
++ Request (application/json, application/xml)
 
++ Request (application/xml)
+    + Body
+
+            <request>
+                <context>
+                    <version info="..."/>
+                </context>
+                <attributes>
+                    <attribute><attribute>
+                </attributes>
+            </request>
+        
 + Response 200
 
-
 ## Attributes With Context [/attributes/context/?tokenKey,includeDomains]
-### Retrieve complete information on every attribute in the list [POST]
+### Populate attributes based on the context [POST]
+
+The servic will build the resulting map of attributes based on the payload in the request body.
 
 + Parameters
     + tokenKey (required, string) ... authentication token
     + includeDomains (optional, boolen) ... whentrue the attributes will include list of domain values 
 
++ Request (application/xml)
+    + Body
+
+            <request>
+                <context>
+                    <version info="..."/>
+                </context>
+                <!-- mutually exclusive attributesMap and keyList -->
+                <attributesMap>
+                    <entry pmKey="01">
+                        <attributes>
+                            <attribute><attribute>
+                        </attributes>
+                </attributesMap>
+                <!-- or -->
+                <keys>
+                    <key>01</key>
+                    <key>02</key>
+                </keys>
+            </request>
+
 + Response 200
+
+
 
 
 # Group Opportuniy Packages
