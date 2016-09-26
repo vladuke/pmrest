@@ -110,7 +110,7 @@ Only the version information is taken into consideration.
     + Body
 
 
-## Product Components [/products/{productType}/filtered/?tokenKey,contextFree,includeUnvailable,deep]
+## Filtered Product Components [/products/{productType}/filtered/?tokenKey,contextFree,includeUnvailable,deep]
 ### Retrieve filtered product components [POST]
 + Parameters
     + tokenKey (required, string) ... authentication token
@@ -139,7 +139,7 @@ Only the version information is taken into consideration.
 # Group Attributes
 
 ## Attributes Without Context [/attributes/?tokenKey]
-### Retrieve coplete details of the attribute included on the list  [POST]
+### Populate attributes included on the list  [POST]
 + Parameters
     + tokenKey (required, string) ... authentication token
 
@@ -162,7 +162,7 @@ Only the version information is taken into consideration.
 ## Attributes With Context [/attributes/context/?tokenKey,includeDomains]
 ### Populate attributes based on the context [POST]
 
-The servic will build the resulting map of attributes based on the payload in the request body.
+The service will build the resulting map of attributes based on the payload in the request body.
 
 + Parameters
     + tokenKey (required, string) ... authentication token
@@ -190,101 +190,109 @@ The servic will build the resulting map of attributes based on the payload in th
             </request>
 
 + Response 200
+    + Body
+    
+            <!-- TODO: refer to XSD -->
+            <List>
+                <AttributeInfo name="releasedDate" objectIdentifier="001" master="false" objectName="PackageBO" 
+                        ratingRelevant="false" changeable="false" relevant="false" required="false">
+                    <Domain defaultValue="01/01/2017" isDate="true"/>
+                </AttributeInfo>
+                <AttributeInfo name="marketSize" objectIdentifier="001" master="true" objectName="PackageBO"
+                        ratingRelevant="true" changeable="true" relevant="true" required="false">
+                    <Domain defaultValue="National" isEnumerated="true">
+                        <Value acronym="National" id="1071" name="National" order="0" />
+                        <Value acronym="Premier" id="1075" name="Premier Accounts" order="0"/>
+                    </Domain>
+                    <DependentInfo>
+                        <PropertyInfo id="2988" name="SumInsured"/>
+                    </DependentInfo>
+                </AttributeInfo>
+            </List>
 
 
+# Group Validations
 
+## Validation Results [/validations/?tokenKey,event,deep]
+### Obtain validation results [POST]
 
-# Group Opportuniy Packages
+The Validation Service executes all product validation rules and returns a data structure
+to the consuming application to communicate rule failures and additional information 
+that identifies what logical entities on a policy or quote caused those failures. 
 
-## Packages Unique Identifiers Collection [/opportunities/{ouid}/packages/uid?tokenKey]
-### List all packages' identifiers within an opportunitiy  [GET]
 + Parameters
-    + ouid (required, integer) ... opportunity identifier
     + tokenKey (required, string) ... authentication token
-
-+ Response 200 (application/json, application/xml)
-
-        Retrieved list of packages' identifiers
-        <!-- Refer to XML and JSON schemas -->
-
-
-## New Package for Opportunity [/opportunities/{ouid}/packages/?packageType,skipValidation,tokenKey]
-### Create a package [POST]
-+ Parameters
-    + ouid (required, integer) ... opportunity identifier
-    + packageType (required, string) ... type for the new package
-    + skipValidation (optional, boolean) ... enforce or ignore product validation rules
-    + tokenKey (required, string) ... authentication token
-
+    + event (optional, string) ... may be used to exclude validations not applicable to this event
+    + deep (optional, boolean) ... when true the context and all its children will be included in the scope
+    
 + Request (application/json, application/xml)
 
-        <!-- Refer to XML and JSON schemas -->
++ Request (application/xml)
+    + Body
 
-+ Response 201
-
-    + Headers
-
-            Link: /opportunities/ouid/packages/puid
-
-## Existing Package [/opportunities/{ouid}/packages/{puid}?tokenKey,skipValidation]
-### Retrieve a plan within an opportunity [GET]
-+ Parameters
-    + ouid (required, integer) ...  unique identfier of the opportunity
-    + puid (required, integer) ...  unique identfier of the package
-    + tokenKey (required, string) ... authentication token
-
+            <request>
+                <context>
+                    <version info="..."/>
+                </context>
+            </request>
+        
 + Response 200
+    + Body
 
-        <!-- Refer to XML and JSON schemas -->
+            <ValidationResult isValid="false">
+                <FailedRule contextID="001" contextName="PackageBO" referralLevel="UW000" ruleName="Domain Validation">
+                    <Message authorityLevel="ALL" code="1" errorLevel="Error" messageText="marketSize data not within the domain range"/>
+                    <Attribute name="marketSize" objectId="001" objectName="PackageBO" value="Size100To499"/>
+                </FailedRule>
+                <FailedRule contextID="001" contextName="PackageBO" referralLevel="UW080" ruleName="RuleCasePremiumLimitCheckLifeDis">
+                    <Message authorityLevel="ALL" code="1" errorLevel="Referral" messageText="Authorization approval is required for Total Life premium."/>
+                </FailedRule>
+            </ValidationResult>            
+            
 
+# Group Calculations
 
-### Update Package [PUT]
+## Pricing Calculations [/calculations/?tokenKey]
+### Provide pricing information for the context [POST]
+
+Performs calculations based on the context provided.Typically this returns premiums, taxes, and other fees.
+The root object of the calculation is typically an adaptation of a Policy. 
+What is returned in the list are typically PremiumComponent objects, 
+which each contain a list of PremiumDetail objects.
+However, this depends on the implementation of the Calculation Service being used by a given project.
+
 + Parameters
-    + ouid (required, integer) ...  unique identfier of the opportunity
-    + puid (required, integer) ...  unique identfier of the package
     + tokenKey (required, string) ... authentication token
 
 + Request (application/json, application/xml)
 
-        <!-- Refer to XML and JSON schemas -->
++ Request (application/xml)
+    + Body
 
-+ Response 204
+            <request>
+                <context>
+                    <version info="..."/>
+                </context>
+            </request>
+        
++ Response 200
+    + Body
 
-### Delete Package [DELETE]
-+ Parameters
-    + ouid (required, integer) ...  unique identfier of the opportunity
-    + puid (required, integer) ...  unique identfier of the package
-    + tokenKey (required, string) ... authentication token
-
-+ Response 204
-
-## Packaged Plans Unique Identifiers Collection  [/opportunities/{ouid}/packages/{puid}/plans/uid?tokenKey]
-### List all packages' identifiers within an opportunitiy  [GET]
-+ Parameters
-    + ouid (required, integer) ... opportunity identifier
-    + puid (required, integer) ... package identifier
-    + tokenKey (required, string) ... authentication token
-
-+ Response 200 (application/json, application/xml)
-
-        Retrieved list of plans' identifier within a package
-        <!-- Refer to XML and JSON schemas -->
-
-## Manipulate Packaged Plans [/opportunities/{ouid}/packages/{pkuid}/plans/{pluid}?tokenKey]
-### Add a plan within an opportunity to a package [PUT]
-+ Parameters
-    + ouid (required, integer) ... opportunity identifier
-    + pkuid (required, integer) ... package identifier
-    + pluid (required, integer) ... plan identifier
-    + tokenKey (required, string) ... authentication token
-
-+ Response 204
-
-### Remove a plan from a package [DELETE]
-+ Parameters
-    + ouid (required, integer) ... opportunity identifier
-    + pkuid (required, integer) ... package identifier
-    + pluid (required, integer) ... plan identifier
-    + tokenKey (required, string) ... authentication token
-
-+ Response 204
+            <RateComponentBO contextObjId="232" rateComponentType="Manual">
+              <RateDetailBO amount="16923427.9" rateDetailType="BenefitVolume"/>
+              <RateDetailBO amount="139803.6842748001" rateDetailType="AnnualNetPremium"/>
+              <RateDetailBO amount="1.4632" rateDetailType="TotalFactor"/>
+              <RateDetailBO amount="1" rateDetailType="WaiverSICFactor"/>
+              <RateDetailBO amount="1" rateDetailType="Waiver"/>
+              <RateDetailBO amount="204560.7508308874" rateDetailType="Premium"/>
+              <RateDetailBO amount="1" rateDetailType="CABFactor"/>
+              <RateDetailBO amount="1" rateDetailType="EffectiveDateAdjustment"/>
+              <RateDetailBO amount="1.18" rateDetailType="SalaryAdjustmentFactor"/>
+              <RateDetailBO amount="1" rateDetailType="OtherAdjustments"/>
+              <RateDetailBO amount="1.007" rateDetailType="Rate"/>
+              <RateDetailBO amount="1" rateDetailType="AreaFactor"/>
+              <RateDetailBO amount="0.6884129558" rateDetailType="InitialBaseClaimCost"/>
+              <RateDetailBO amount="1.24" rateDetailType="IndustryFactor"/>
+              <RateDetailBO amount="1" rateDetailType="ExperienceLoad"/>
+              <RateDetailBO amount="1" rateDetailType="DisabledNoListLoad"/>
+            </RateComponentBO>
