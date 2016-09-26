@@ -134,49 +134,29 @@ Only the version information is taken into consideration.
 + Response 200
     + Body
 
-## Existing Opportunity [/opportunities/{uid}?tokenKey,skipValidation]
 
-### Retrieve an opportunity [GET]
-+ Parameters
-    + uid (required, integer) ...  unique identfier
-    + tokenKey (required, string) ... authentication token
+# Group Attributes
 
-+ Response 200
-
-        <!-- Refer to XML and JSON schemas -->
-
-
-### Update Opportunity [PUT]
-+ Parameters
-    + uid (required, integer) ... unique identfier
-    + skipValidation (optional, boolean) ... enforce or ignore product validation rules
-    + tokenKey (required, string) ... authentication token
-
-+ Request (application/json, application/xml)
-
-        <!-- Refer to XML and JSON schemas -->
-
-+ Response 204
-
-### Delete Opportunity [DELETE]
-+ Parameters
-    + uid (required, integer) ... unique identfier
-    + tokenKey (required, string) ... authentication token
-
-+ Response 204
-
-# Group Opportuniy Plans
-
-## Plans Unique Identifiers Collection [/opportunities/{ouid}/plans/uid?tokenKey]
+## Attributes Without Context [/attributes/?tokenKey]
 ### List all plans' identifiers within an opportunity [GET]
 + Parameters
-    + ouid (required, integer) ... opportunity identifier
     + tokenKey (required, string) ... authentication token
+    
++ Request (application/xml)
+    + Body
 
-+ Response 200 (application/json, application/xml)
+            <request>
+                <context>
+                    <version info="..."/>
+                </context>
+                <attributes>
+                    <attribute><attribute>
+                </attributes>
+            </requet>
 
-        Retrieved list of plans' identifiers
-        <!-- Refer to XML and JSON schemas -->
++ Response 200
+    + Body
+
 
 
 ## New Plan for Opportunity [/opportunities/{ouid}/plans/?planType,skipValidation,tokenKey]
