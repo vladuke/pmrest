@@ -1,0 +1,325 @@
+FORMAT: 1A
+HOST: https://prms.fjaus.com
+
+# FJA-US Product Machine Runtime Service Reference API
+The Product Machine Runtime Service (PMRS) is the runtime component of the Product Machine.
+This component exposes varies services that can be called by consuming applications to perform calculation
+and validation services. It also can be used to retrieve information about products and covers.
+Finally, it exposes meta information about the input data required to call calculation and validation routines.
+This document describes the main features of this component and provides details about
+the service calls available.
+The interfce is designed to have predictable, resource-oriented URLs whenever possible and to use HTTP
+response codes to indicate API errors.
+The API relies on the built-in HTTP features e.g. HTTP authentication, HTTP verbs, HTTP headers, etc.
+
+# Version
+1.1
+
+# Authentication
+API users are required to obtain an authentication token by passing user ID and password to FJA-US IPL Security application via its own REST API. Prior to receiving  a token the user must be created and configured in IPL Security.
+The token must be subsequently used on all API requests. The tokens have expiration time which is a configurable parameter in IPL Security.
+THe system does not allow multiple tokens per single user ID.
+
+# Authorization
+Each request to API translates the supplied token into the user's action rights and domains,
+The user's access to resources is based on the combination of the above. For example,
+
+
+*  An action right **.product.validate** allows its holder to validate context
+*  A domain ***business.ACME*** provides access to product information  ***ACME-Life***, ***ACME-Life-Optional***,
+and ***ACME-Disability***
+
+
+# Base URI
+
+All requests will extend URL **https://prms.fjaus.com/services/version/**
+
+# Content
+
+## Request
+
+The request content has to be submitted XML. The client must provide HTTP header **content-type: application/xml**
+
+## Response
+
+The response type is XML. The client must provide HTTP header **accept: application/xml**
+
+
+# Common Response Codes
+
+* 200 **OK** Successfully completed a retireval request
+* 400 **Bad Content** Invalid content or busines logic failure
+* 401 **Not Authenticated** A request cannot be authenticated by the server
+* 403 **Forbidden** Authorization failure
+* 404 **Not Found** A resource is not found
+* 405 **Bad Method** An unsupported HTTP method
+* 419 **Authentication timeout** expired authentication token
+* 500 **Server Error** A runtime error on server
+
+# HTTP Verbs Usage
+
+Given the typical payload size HTTP POST is used instead of HTTP GET for many retrieval requests.
+
+# Group Products
+
+## Root Product Components [/products/?tokenKey]
+
+Retrieves information about the product components at the root of the hierarchy.
+Only the version information is taken into consideration.
+
+
+### List all avaliable root products components [GET]
++ Parameters
+    + tokenKey (required, string) ... authentication token
+
++ Request
+    + Body
+
+            <request>
+                <context>
+                    <version info="..."/>
+                </context>
+            </requet>
+
++ Response 200 (application/xml)
+
+        Retrieved list of opportunities' identifiers
+        <!-- Refer to XMLschemas -->
+
+
+
+## Product Components [/products/{productType}/?tokenKey,contextFree,includeUnvailable,deep]
+### Retrieve unfiltered product components [POST]
++ Parameters
+    + tokenKey (required, string) ... authentication token
+    + productType (required, string) ... type is an unique identfier within product definition
+    + contextFree (optional, boolean) ...    when true no formulas are executed during availability processing, otherwise full processing is done
+    + includeUnvailable (optional, boolean) ... if set to true components and group constraint rules which are unavailable will be returned, and children will be processed
+    + deep (optional, boolean) ... when true process all ancestors of the context component, otherwise only the immediate children are processed
+
++ Request (application/xml)
+    + Body
+
+            <request>
+                <context>
+                    <version info="..."/>
+                </context>
+            </requet>
+
++ Response 200
+    + Body
+
+
+## Product Components [/products/{productType}/filtered/?tokenKey,contextFree,includeUnvailable,deep]
+### Retrieve filtered product components [POST]
++ Parameters
+    + tokenKey (required, string) ... authentication token
+    + productType (required, string) ... type is an unique identfier within product definition
+    + contextFree (optional, boolean) ... when true no formulas are executed during availability processing, otherwise full processing is done
+    + includeUnvailable (optional, boolean) ... if set to true components and group constraint rules which are unavailable will be returned, and children will be processed
+    + deep (optional, boolean) ... when true process all ancestors of the context component, otherwise only the immediate children are processed
+
++ Request (application/xml)
+    + Body
+
+            <request>
+                <context>
+                    <version info="..."/>
+                </context>
+                <includedTypes>
+                    <type>PLANS</type>
+                </includedTypes>
+            </requet>
+
++ Response 200
+    + Body
+
+## Existing Opportunity [/opportunities/{uid}?tokenKey,skipValidation]
+
+### Retrieve an opportunity [GET]
++ Parameters
+    + uid (required, integer) ...  unique identfier
+    + tokenKey (required, string) ... authentication token
+
++ Response 200
+
+        <!-- Refer to XML and JSON schemas -->
+
+
+### Update Opportunity [PUT]
++ Parameters
+    + uid (required, integer) ... unique identfier
+    + skipValidation (optional, boolean) ... enforce or ignore product validation rules
+    + tokenKey (required, string) ... authentication token
+
++ Request (application/json, application/xml)
+
+        <!-- Refer to XML and JSON schemas -->
+
++ Response 204
+
+### Delete Opportunity [DELETE]
++ Parameters
+    + uid (required, integer) ... unique identfier
+    + tokenKey (required, string) ... authentication token
+
++ Response 204
+
+# Group Opportuniy Plans
+
+## Plans Unique Identifiers Collection [/opportunities/{ouid}/plans/uid?tokenKey]
+### List all plans' identifiers within an opportunity [GET]
++ Parameters
+    + ouid (required, integer) ... opportunity identifier
+    + tokenKey (required, string) ... authentication token
+
++ Response 200 (application/json, application/xml)
+
+        Retrieved list of plans' identifiers
+        <!-- Refer to XML and JSON schemas -->
+
+
+## New Plan for Opportunity [/opportunities/{ouid}/plans/?planType,skipValidation,tokenKey]
+### Create a plan [POST]
++ Parameters
+    + ouid (required, integer) ... opportunity identifier
+    + planType (required, string) ... plan type for the new plan
+    + skipValidation (optional, boolean) ... enforce or ignore product validation rules
+    + tokenKey (required, string) ... authentication token
+
++ Request (application/json, application/xml)
+
+        <!-- Refer to XML and JSON schemas -->
+
++ Response 201
+
+    + Headers
+
+            Link: /opportunities/ouid/plans/puid
+
+## Existing Plan [/opportunities/{ouid}/plans/{puid}?tokenKey,skipValidation]
+### Retrieve a plan within an opportunity [GET]
++ Parameters
+    + ouid (required, integer) ...  unique identfier of the opportunity
+    + puid (required, integer) ...  unique identfier of the plan
+    + tokenKey (required, string) ... authentication token
+
++ Response 200
+
+        <!-- Refer to XML and JSON schemas -->
+
+
+### Update Plan [PUT]
++ Parameters
+    + ouid (required, integer) ...  unique identfier of the opportunity
+    + puid (required, integer) ...  unique identfier of the plan
+    + tokenKey (required, string) ... authentication token
+
++ Request (application/json, application/xml)
+
+        <!-- Refer to XML and JSON schemas -->
+
++ Response 204
+
+### Delete Plan [DELETE]
++ Parameters
+    + ouid (required, integer) ...  unique identfier of the opportunity
+    + puid (required, integer) ...  unique identfier of the plan
+    + tokenKey (required, string) ... authentication token
+
++ Response 204
+
+# Group Opportuniy Packages
+
+## Packages Unique Identifiers Collection [/opportunities/{ouid}/packages/uid?tokenKey]
+### List all packages' identifiers within an opportunitiy  [GET]
++ Parameters
+    + ouid (required, integer) ... opportunity identifier
+    + tokenKey (required, string) ... authentication token
+
++ Response 200 (application/json, application/xml)
+
+        Retrieved list of packages' identifiers
+        <!-- Refer to XML and JSON schemas -->
+
+
+## New Package for Opportunity [/opportunities/{ouid}/packages/?packageType,skipValidation,tokenKey]
+### Create a package [POST]
++ Parameters
+    + ouid (required, integer) ... opportunity identifier
+    + packageType (required, string) ... type for the new package
+    + skipValidation (optional, boolean) ... enforce or ignore product validation rules
+    + tokenKey (required, string) ... authentication token
+
++ Request (application/json, application/xml)
+
+        <!-- Refer to XML and JSON schemas -->
+
++ Response 201
+
+    + Headers
+
+            Link: /opportunities/ouid/packages/puid
+
+## Existing Package [/opportunities/{ouid}/packages/{puid}?tokenKey,skipValidation]
+### Retrieve a plan within an opportunity [GET]
++ Parameters
+    + ouid (required, integer) ...  unique identfier of the opportunity
+    + puid (required, integer) ...  unique identfier of the package
+    + tokenKey (required, string) ... authentication token
+
++ Response 200
+
+        <!-- Refer to XML and JSON schemas -->
+
+
+### Update Package [PUT]
++ Parameters
+    + ouid (required, integer) ...  unique identfier of the opportunity
+    + puid (required, integer) ...  unique identfier of the package
+    + tokenKey (required, string) ... authentication token
+
++ Request (application/json, application/xml)
+
+        <!-- Refer to XML and JSON schemas -->
+
++ Response 204
+
+### Delete Package [DELETE]
++ Parameters
+    + ouid (required, integer) ...  unique identfier of the opportunity
+    + puid (required, integer) ...  unique identfier of the package
+    + tokenKey (required, string) ... authentication token
+
++ Response 204
+
+## Packaged Plans Unique Identifiers Collection  [/opportunities/{ouid}/packages/{puid}/plans/uid?tokenKey]
+### List all packages' identifiers within an opportunitiy  [GET]
++ Parameters
+    + ouid (required, integer) ... opportunity identifier
+    + puid (required, integer) ... package identifier
+    + tokenKey (required, string) ... authentication token
+
++ Response 200 (application/json, application/xml)
+
+        Retrieved list of plans' identifier within a package
+        <!-- Refer to XML and JSON schemas -->
+
+## Manipulate Packaged Plans [/opportunities/{ouid}/packages/{pkuid}/plans/{pluid}?tokenKey]
+### Add a plan within an opportunity to a package [PUT]
++ Parameters
+    + ouid (required, integer) ... opportunity identifier
+    + pkuid (required, integer) ... package identifier
+    + pluid (required, integer) ... plan identifier
+    + tokenKey (required, string) ... authentication token
+
++ Response 204
+
+### Remove a plan from a package [DELETE]
++ Parameters
+    + ouid (required, integer) ... opportunity identifier
+    + pkuid (required, integer) ... package identifier
+    + pluid (required, integer) ... plan identifier
+    + tokenKey (required, string) ... authentication token
+
++ Response 204
