@@ -38,11 +38,18 @@ All requests will extend URL **https://prms.fjaus.com/services/version/**
 
 ## Request
 
-The request content has to be submitted XML. The client must provide HTTP header **content-type: application/xml**
+The request content has to be submitted in XML comptabile with one the following XML schemas
+* FJA-US Health **http://schemas.fjaus.com/current/HealthRef.xsd**
+* FJA-US Group Life  **http://schemas.fjaus.com/current/GroupInsurance.xsd**
+* FJA-US Property and Casualty  **http://schemas.fjaus.com/current/PandC.xsd**
+
+The client must provide HTTP header **content-type: application/xml**
+
 
 ## Response
 
-The response type is XML. The client must provide HTTP header **accept: application/xml**
+The response type is XML which is comptabile with ProductMachine.xsd ***http://schemas.fjaus.com/current/ProductMachine.xsd**
+The client must provide HTTP header **accept: application/xml**
 
 
 # Common Response Codes
@@ -83,7 +90,7 @@ Only the version information is taken into consideration.
 
 + Response 200 (application/xml)
 
-        Retrieved list of opportunities' identifiers
+        
         <!-- Refer to XMLschemas -->
 
 
@@ -276,8 +283,10 @@ However, this depends on the implementation of the Calculation Service being use
             </request>
         
 + Response 200
+
     + Body
 
+            <!-- Sample from Group Insurance product -->
             <RateComponentBO contextObjId="232" rateComponentType="Manual">
               <RateDetailBO amount="16923427.9" rateDetailType="BenefitVolume"/>
               <RateDetailBO amount="139803.6842748001" rateDetailType="AnnualNetPremium"/>
@@ -296,3 +305,8 @@ However, this depends on the implementation of the Calculation Service being use
               <RateDetailBO amount="1" rateDetailType="ExperienceLoad"/>
               <RateDetailBO amount="1" rateDetailType="DisabledNoListLoad"/>
             </RateComponentBO>
+    + Schema
+    
+                
+            
+# Data Structures
