@@ -58,11 +58,11 @@ The response type is XML. The client must provide HTTP header **accept: applicat
 
 # HTTP Verbs Usage
 
-Given the typical payload size HTTP POST is used instead of HTTP GET for many retrieval requests.
+Given the typical payload size for these services HTTP POST is used instead of HTTP GET for some requests.
 
 # Group Products
 
-## Root Product Components [/products/?tokenKey]
+## Root Product Components [/products/?{tokenKey}]
 
 Retrieves information about the product components at the root of the hierarchy.
 Only the version information is taken into consideration.
@@ -88,7 +88,7 @@ Only the version information is taken into consideration.
 
 
 
-## Product Components [/products/{productType}/?tokenKey,contextFree,includeUnvailable,deep]
+## Product Components [/products/{productType}/?{tokenKey},{contextFree},{includeUnvailable},{deep}]
 ### Retrieve unfiltered product components [POST]
 + Parameters
     + tokenKey (required, string) ... authentication token
@@ -110,7 +110,7 @@ Only the version information is taken into consideration.
     + Body
 
 
-## Filtered Product Components [/products/{productType}/filtered/?tokenKey,contextFree,includeUnvailable,deep]
+## Filtered Product Components [/products/{productType}/filtered/{?tokenKey,contextFree,includeUnvailable,deep}]
 ### Retrieve filtered product components [POST]
 + Parameters
     + tokenKey (required, string) ... authentication token
@@ -138,7 +138,7 @@ Only the version information is taken into consideration.
 
 # Group Attributes
 
-## Attributes Without Context [/attributes/?tokenKey]
+## Attributes Without Context [/attributes/{?tokenKey}]
 ### Populate attributes included on the list  [POST]
 + Parameters
     + tokenKey (required, string) ... authentication token
@@ -159,7 +159,7 @@ Only the version information is taken into consideration.
         
 + Response 200
 
-## Attributes With Context [/attributes/context/?tokenKey,includeDomains]
+## Attributes With Context [/attributes/context/{?tokenKey,includeDomains}]
 ### Populate attributes based on the context [POST]
 
 The service will build the resulting map of attributes based on the payload in the request body.
@@ -213,7 +213,7 @@ The service will build the resulting map of attributes based on the payload in t
 
 # Group Validations
 
-## Validation Results [/validations/?tokenKey,event,deep]
+## Validation Results [/validations/{?tokenKey,event,deep}]
 ### Obtain validation results [POST]
 
 The Validation Service executes all product validation rules and returns a data structure
@@ -252,7 +252,7 @@ that identifies what logical entities on a policy or quote caused those failures
 
 # Group Calculations
 
-## Pricing Calculations [/calculations/?tokenKey]
+## Pricing Calculations [/calculations/{?tokenKey}]
 ### Provide pricing information for the context [POST]
 
 Performs calculations based on the context provided.Typically this returns premiums, taxes, and other fees.
