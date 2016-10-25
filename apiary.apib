@@ -5,10 +5,12 @@ HOST: https://prms.fjaus.com
 The Product Machine Runtime Service (PMRS) is the runtime component of the Product Machine.
 This component exposes varies services that can be called by consuming applications to perform calculation
 and validation services. It also can be used to retrieve information about products and covers.
+
 Finally, it exposes meta information about the input data required to call calculation and validation routines.
 This document describes the main features of this component and provides details about
 the service calls available.
-The interfce is designed to have predictable, resource-oriented URLs whenever possible and to use HTTP
+
+The interface is designed to have predictable, resource-oriented URLs whenever possible and to use HTTP
 response codes to indicate API errors.
 The API relies on the built-in HTTP features e.g. HTTP authentication, HTTP verbs, HTTP headers, etc.
 
@@ -16,18 +18,17 @@ The API relies on the built-in HTTP features e.g. HTTP authentication, HTTP verb
 1.1
 
 # Authentication
-API users are required to obtain an authentication token by passing user ID and password to FJA-US IPL Security application via its own REST API. Prior to receiving  a token the user must be created and configured in IPL Security.
-The token must be subsequently used on all API requests. The tokens have expiration time which is a configurable parameter in IPL Security.
+API users are required to obtain an authentication token by passing user ID and password to FJA-US User Mangement Module (UMM) via its REST API. 
+Prior to receiving  a token the user must be created and configured in UMM. The token must be subsequently 
+used on all API requests. The tokens have expiration time which is a configurable parameter in UMM application.
 THe system does not allow multiple tokens per single user ID.
 
 # Authorization
 Each request to API translates the supplied token into the user's action rights and domains,
 The user's access to resources is based on the combination of the above. For example,
 
-
 *  An action right **.product.validate** allows its holder to validate context
-*  A domain ***business.ACME*** provides access to product information  ***ACME-Life***, ***ACME-Life-Optional***,
-and ***ACME-Disability***
+*  A domain ***business.ACME*** provides access to product information  ***ACME-Life***, ***ACME-Life-Optional***, and ***ACME-Disability***
 
 
 # Base URI
@@ -38,7 +39,8 @@ All requests will extend URL **https://prms.fjaus.com/services/version/**
 
 ## Request
 
-The request content has to be submitted in XML comptabile with one the following XML schemas
+The request content has to be submitted in XML compatible with one the following XML schemes:
+
 * FJA-US Health **https://schemas.fjaus.com/current/HealthRef.xsd**
 * FJA-US Group Life  **https://schemas.fjaus.com/current/GroupInsurance.xsd**
 * FJA-US Property and Casualty  **https://schemas.fjaus.com/current/PandC.xsd**
@@ -48,7 +50,8 @@ The client must provide HTTP header **content-type: application/xml**
 
 ## Response
 
-The response type is XML which is comptabile with the following schema. 
+The response type is XML which is compatible with the following schema:
+
 * FJA-US Product Machine Services ***https://schemas.fjaus.com/current/ProductMachine.xsd**
 
 The client must provide HTTP header **accept: application/xml**
@@ -65,14 +68,14 @@ Additionally see the various requests and responses samples in XML format at
 
 # Common Response Codes
 
-* 200 **OK** Successfully completed a retireval request
-* 400 **Bad Content** Invalid content or busines logic failure
+* 200 **OK** Successfully completed a retrieval request
+* 400 **Bad Content** Invalid content or business logic failure
 * 401 **Not Authenticated** A request cannot be authenticated by the server
 * 403 **Forbidden** Authorization failure
 * 404 **Not Found** A resource is not found
 * 405 **Bad Method** An unsupported HTTP method
 * 419 **Authentication timeout** expired authentication token
-* 500 **Server Error** A runtime error on server
+* 500 **Server Error** A run time error on server
 
 # HTTP Verbs Usage
 
@@ -105,7 +108,7 @@ Only the version information is taken into consideration.
 ### Retrieve unfiltered product components [POST]
 + Parameters
     + tokenKey (required, string) ... authentication token
-    + productType (required, string) ... type is an unique identfier within product definition
+    + productType (required, string) ... type is an unique identifier within product definition
     + contextFree (optional, boolean) ...    when true no formulas are executed during availability processing, otherwise full processing is done
     + includeUnvailable (optional, boolean) ... if set to true components and group constraint rules which are unavailable will be returned, and children will be processed
     + deep (optional, boolean) ... when true process all ancestors of the context component, otherwise only the immediate children are processed
@@ -125,7 +128,7 @@ Only the version information is taken into consideration.
 ### Retrieve filtered product components [POST]
 + Parameters
     + tokenKey (required, string) ... authentication token
-    + productType (required, string) ... type is an unique identfier within product definition
+    + productType (required, string) ... type is an unique identifier within product definition
     + contextFree (optional, boolean) ... when true no formulas are executed during availability processing, otherwise full processing is done
     + includeUnvailable (optional, boolean) ... if set to true components and group constraint rules which are unavailable will be returned, and children will be processed
     + deep (optional, boolean) ... when true process all ancestors of the context component, otherwise only the immediate children are processed
@@ -165,7 +168,7 @@ The service will build the resulting map of attributes based on the payload in t
 
 + Parameters
     + tokenKey (required, string) ... authentication token
-    + includeDomains (optional, boolen) ... whentrue the attributes will include list of domain values 
+    + includeDomains (optional, boolean) ... when true the attributes will include list of domain values 
 
 + Request (application/xml)
     + Body
