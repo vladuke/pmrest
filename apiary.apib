@@ -48,8 +48,15 @@ The client must provide HTTP header **content-type: application/xml**
 
 ## Response
 
-The response type is XML which is comptabile with ProductMachine.xsd ***http://schemas.fjaus.com/current/ProductMachine.xsd**
+The response type is XML which is comptabile with the following schema. 
+* FJA-US Product Machine Services ***http://schemas.fjaus.com/current/ProductMachine.xsd**
+
 The client must provide HTTP header **accept: application/xml**
+
+
+## Samples 
+
+Additionally see attched samples of various requests and responses in the XML format.
 
 
 # Common Response Codes
@@ -82,17 +89,12 @@ Only the version information is taken into consideration.
 + Request
     + Body
 
-            <request>
-                <context>
-                    <version info="..."/>
-                </context>
-            </requet>
+            Refer to FJA-US Health, Group Life, and Property and Casualty XML schemas and the applicable request samples
 
 + Response 200 (application/xml)
+    + Body
 
-        
-        <!-- Refer to XMLschemas -->
-
+            Refer to FJA-US Product Machine Services XML schema and the request samples
 
 
 ## Product Components [/products/{productType}/?{tokenKey},{contextFree},{includeUnvailable},{deep}]
@@ -107,14 +109,12 @@ Only the version information is taken into consideration.
 + Request (application/xml)
     + Body
 
-            <request>
-                <context>
-                    <version info="..."/>
-                </context>
-            </requet>
+            Refer to FJA-US Health, Group Life, and Property and Casualty XML schemas and the applicable request samples
 
 + Response 200
     + Body
+
+            Refer to FJA-US Product Machine Services XML schema and the request samples
 
 
 ## Filtered Product Components [/products/{productType}/filtered/{?tokenKey,contextFree,includeUnvailable,deep}]
@@ -129,18 +129,12 @@ Only the version information is taken into consideration.
 + Request (application/xml)
     + Body
 
-            <request>
-                <context>
-                    <version info="..."/>
-                </context>
-                <includedTypes>
-                    <type>PLANS</type>
-                </includedTypes>
-            </requet>
+            Refer to FJA-US Health, Group Life, and Property and Casualty XML schemas and the applicable request samples
 
 + Response 200
+    + Body
 
-            <!-- Sample & refer to XML  schemas -->
+            Refer to FJA-US Product Machine Services XML schema and the request samples
 
 
 # Group Attributes
@@ -150,21 +144,15 @@ Only the version information is taken into consideration.
 + Parameters
     + tokenKey (required, string) ... authentication token
 
-+ Request (application/json, application/xml)
-
 + Request (application/xml)
     + Body
 
-            <request>
-                <context>
-                    <version info="..."/>
-                </context>
-                <attributes>
-                    <attribute><attribute>
-                </attributes>
-            </request>
+            Refer to FJA-US Health, Group Life, and Property and Casualty XML schemas and the applicable request samples
         
 + Response 200
+    + Body
+
+            Refer to FJA-US Product Machine Services XML schema and the request samples
 
 ## Attributes With Context [/attributes/context/{?tokenKey,includeDomains}]
 ### Populate attributes based on the context [POST]
@@ -178,45 +166,12 @@ The service will build the resulting map of attributes based on the payload in t
 + Request (application/xml)
     + Body
 
-            <request>
-                <context>
-                    <version info="..."/>
-                </context>
-                <!-- mutually exclusive attributesMap and keyList -->
-                <attributesMap>
-                    <entry pmKey="01">
-                        <attributes>
-                            <attribute><attribute>
-                        </attributes>
-                </attributesMap>
-                <!-- or -->
-                <keys>
-                    <key>01</key>
-                    <key>02</key>
-                </keys>
-            </request>
+            Refer to FJA-US Health, Group Life, and Property and Casualty XML schemas and the applicable request samples
 
 + Response 200
     + Body
-    
-            <!-- TODO: refer to XSD -->
-            <List>
-                <AttributeInfo name="releasedDate" objectIdentifier="001" master="false" objectName="PackageBO" 
-                        ratingRelevant="false" changeable="false" relevant="false" required="false">
-                    <Domain defaultValue="01/01/2017" isDate="true"/>
-                </AttributeInfo>
-                <AttributeInfo name="marketSize" objectIdentifier="001" master="true" objectName="PackageBO"
-                        ratingRelevant="true" changeable="true" relevant="true" required="false">
-                    <Domain defaultValue="National" isEnumerated="true">
-                        <Value acronym="National" id="1071" name="National" order="0" />
-                        <Value acronym="Premier" id="1075" name="Premier Accounts" order="0"/>
-                    </Domain>
-                    <DependentInfo>
-                        <PropertyInfo id="2988" name="SumInsured"/>
-                    </DependentInfo>
-                </AttributeInfo>
-            </List>
 
+            Refer to FJA-US Product Machine Services XML schema and the request samples
 
 # Group Validations
 
@@ -232,29 +187,15 @@ that identifies what logical entities on a policy or quote caused those failures
     + event (optional, string) ... may be used to exclude validations not applicable to this event
     + deep (optional, boolean) ... when true the context and all its children will be included in the scope
     
-+ Request (application/json, application/xml)
-
 + Request (application/xml)
     + Body
 
-            <request>
-                <context>
-                    <version info="..."/>
-                </context>
-            </request>
+            Refer to FJA-US Health, Group Life, and Property and Casualty XML schemas and the applicable request samples
         
 + Response 200
     + Body
 
-            <ValidationResult isValid="false">
-                <FailedRule contextID="001" contextName="PackageBO" referralLevel="UW000" ruleName="Domain Validation">
-                    <Message authorityLevel="ALL" code="1" errorLevel="Error" messageText="marketSize data not within the domain range"/>
-                    <Attribute name="marketSize" objectId="001" objectName="PackageBO" value="Size100To499"/>
-                </FailedRule>
-                <FailedRule contextID="001" contextName="PackageBO" referralLevel="UW080" ruleName="RuleCasePremiumLimitCheckLifeDis">
-                    <Message authorityLevel="ALL" code="1" errorLevel="Referral" messageText="Authorization approval is required for Total Life premium."/>
-                </FailedRule>
-            </ValidationResult>            
+            Refer to FJA-US Product Machine Services XML schema and the request samples
             
 
 # Group Calculations
@@ -271,42 +212,12 @@ However, this depends on the implementation of the Calculation Service being use
 + Parameters
     + tokenKey (required, string) ... authentication token
 
-+ Request (application/json, application/xml)
-
 + Request (application/xml)
     + Body
 
-            <request>
-                <context>
-                    <version info="..."/>
-                </context>
-            </request>
+            Refer to FJA-US Health, Group Life, and Property and Casualty XML schemas and the applicable request samples
         
 + Response 200
-
     + Body
 
-            <!-- Sample from Group Insurance product -->
-            <RateComponentBO contextObjId="232" rateComponentType="Manual">
-              <RateDetailBO amount="16923427.9" rateDetailType="BenefitVolume"/>
-              <RateDetailBO amount="139803.6842748001" rateDetailType="AnnualNetPremium"/>
-              <RateDetailBO amount="1.4632" rateDetailType="TotalFactor"/>
-              <RateDetailBO amount="1" rateDetailType="WaiverSICFactor"/>
-              <RateDetailBO amount="1" rateDetailType="Waiver"/>
-              <RateDetailBO amount="204560.7508308874" rateDetailType="Premium"/>
-              <RateDetailBO amount="1" rateDetailType="CABFactor"/>
-              <RateDetailBO amount="1" rateDetailType="EffectiveDateAdjustment"/>
-              <RateDetailBO amount="1.18" rateDetailType="SalaryAdjustmentFactor"/>
-              <RateDetailBO amount="1" rateDetailType="OtherAdjustments"/>
-              <RateDetailBO amount="1.007" rateDetailType="Rate"/>
-              <RateDetailBO amount="1" rateDetailType="AreaFactor"/>
-              <RateDetailBO amount="0.6884129558" rateDetailType="InitialBaseClaimCost"/>
-              <RateDetailBO amount="1.24" rateDetailType="IndustryFactor"/>
-              <RateDetailBO amount="1" rateDetailType="ExperienceLoad"/>
-              <RateDetailBO amount="1" rateDetailType="DisabledNoListLoad"/>
-            </RateComponentBO>
-    + Schema
-    
-                
-            
-# Data Structures
+            Refer to FJA-US Product Machine Services XML schema and the request samples
