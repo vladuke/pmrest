@@ -39,9 +39,9 @@ All requests will extend URL **https://prms.fjaus.com/services/version/**
 ## Request
 
 The request content has to be submitted in XML comptabile with one the following XML schemas
-* FJA-US Health **http://schemas.fjaus.com/current/HealthRef.xsd**
-* FJA-US Group Life  **http://schemas.fjaus.com/current/GroupInsurance.xsd**
-* FJA-US Property and Casualty  **http://schemas.fjaus.com/current/PandC.xsd**
+* FJA-US Health **https://schemas.fjaus.com/current/HealthRef.xsd**
+* FJA-US Group Life  **https://schemas.fjaus.com/current/GroupInsurance.xsd**
+* FJA-US Property and Casualty  **https://schemas.fjaus.com/current/PandC.xsd**
 
 The client must provide HTTP header **content-type: application/xml**
 
@@ -49,14 +49,18 @@ The client must provide HTTP header **content-type: application/xml**
 ## Response
 
 The response type is XML which is comptabile with the following schema. 
-* FJA-US Product Machine Services ***http://schemas.fjaus.com/current/ProductMachine.xsd**
+* FJA-US Product Machine Services ***https://schemas.fjaus.com/current/ProductMachine.xsd**
 
 The client must provide HTTP header **accept: application/xml**
 
 
 ## Samples 
 
-Additionally see attched samples of various requests and responses in the XML format.
+Additionally see the various requests and responses samples in XML format at
+
+* Health samples **https://samples.fjaus.com/health/current/samples**
+* Group Life samples **https://samples.fjaus.com/groupinsurance/current/samples**
+* Property and Casualty samples **https://samples.fjaus.com/pandc/current/samples**
 
 
 # Common Response Codes
